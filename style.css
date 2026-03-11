@@ -305,63 +305,93 @@ body {
 /* Mobile Responsive Adjustments */
 @media (max-width: 992px) {
   .ui-header {
-    padding: 15px;
+    padding: 15px 20px;
+    align-items: flex-start;
+    text-align: left;
   }
 
   .ui-header__logo {
     right: 20px;
-    height: 45px;
+    height: 40px;
   }
 
   .ui-header__name {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
+  }
+
+  .ui-header__group {
+    font-size: 0.8rem;
   }
 
   .ui-container {
-    grid-template-columns: 1fr;
-    margin-top: 100px;
-    padding: 20px;
-    gap: 60px;
+    margin-top: 80px;
+    padding: 15px;
+    gap: 40px;
   }
 
   .ui-sidebar {
-    gap: 60px;
+    gap: 40px;
   }
 
   .ui-section {
     padding: 25px;
+    border-radius: 15px;
   }
 
   .ui-software-links {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 15px;
   }
 
   .software-card {
     padding: 20px;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .software-card__icon {
+    height: 40px;
+  }
+
+  .software-card__text {
+    font-size: 1rem;
   }
 
   .ui-scroll-indicator {
     bottom: 20px;
     padding: 8px 20px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    width: auto;
+    max-width: calc(100% - 40px);
   }
 }
 
 @media (max-width: 480px) {
-  .ui-header__logo {
-    position: static;
-    transform: none;
-    margin-top: 10px;
-    height: 40px;
-  }
-
-  .ui-header__logo:hover {
-    transform: scale(1.05);
-  }
-
   .ui-header {
-    flex-direction: column;
+    padding: 12px 15px;
+  }
+
+  .ui-header__logo {
+    height: 35px;
+    right: 15px;
+  }
+
+  .ui-header__name {
+    font-size: 1.1rem;
+    padding-right: 50px; /* Leave space for logo */
+  }
+
+  .qr-container {
+    align-items: flex-start;
+  }
+
+  .qr-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .qr-text {
+    text-align: left;
   }
 }
 
