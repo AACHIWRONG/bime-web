@@ -3,9 +3,9 @@
 (() => {
   gsap.registerPlugin(ScrollTrigger);
 
-  const START_FRAME = 83;
+  const START_FRAME = 59;
   const FRAME_COUNT = 1;
-  const FRAME_STEP = 2; // 跳幀設定：每 2 張挑 1 張
+  const FRAME_STEP = 3; // 跳幀設定：每 2 張挑 1 張
   const frameSequence = [];
   const canvas = document.getElementById("animation-canvas");
   const ctx = canvas.getContext("2d");
@@ -20,7 +20,7 @@
   // 1. Preload Images
   async function preloadImages() {
     const promises = [];
-    
+
     // 根據步長建立幀序列 (支援正向或反向)
     if (START_FRAME <= FRAME_COUNT) {
       for (let i = START_FRAME; i <= FRAME_COUNT; i += FRAME_STEP) {
@@ -298,7 +298,7 @@
       snap: "index",
       ease: "none",
       scrollTrigger: {
-        trigger: ".scroll-spacer",
+        trigger: ".scroll-container",
         start: "top top",
         end: "bottom bottom",
         scrub: 1.5,
