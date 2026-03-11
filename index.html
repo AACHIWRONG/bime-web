@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Step & Snack - Scroll Animation</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Matter.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+
+<body>
+  <div id="loader">
+    <div class="loader__label">Loading ... <span id="loaderPct">0</span>%</div>
+    <div class="loader__bar-bg">
+      <div id="loaderBar"></div>
+    </div>
+    <img id="caramel-texture-preloader" src="caramel_box.png" style="display:none">
+  </div>
+
+  <main id="page" class="is-hidden">
+    <!-- Header Section -->
+    <header class="ui-header">
+      <div class="ui-header__group">生機系杜鵑花節第3小組</div>
+      <a href="https://www.bime.ntu.edu.tw/Default.html" target="_blank" class="ui-header__name">看看我們生機系!!</a>
+      <a href="https://www.bime.ntu.edu.tw/Default.html" target="_blank" class="ui-header__logo">
+        <img src="bime_logo.png" alt="BIME Logo">
+      </a>
+    </header>
+
+    <div class="scroll-container">
+      <div class="canvas-wrapper">
+        <canvas id="animation-canvas"></canvas>
+      </div>
+      <canvas id="physics-canvas"></canvas>
+
+      <!-- UI Content Layout -->
+      <div class="ui-container">
+        <aside class="ui-sidebar">
+          <section class="ui-section ui-section--qr">
+            <h2 class="ui-section__title">[ press & snack !! ]</h2>
+            <div class="qr-container">
+              <img src="project_qr_code.png" alt="Project QR Code" class="qr-image">
+              <p class="qr-text">https://aachiwrong.github.io/bime-web/</p>
+            </div>
+          </section>
+
+          <section class="ui-section">
+            <h2 class="ui-section__title">設計理念：</h2>
+            <p class="ui-section__text">地鼠自動餵食器為<strong>觀光農場導向</strong>的產品，希望能透過寶可夢主題，吸引更多遊客的目光。</p>
+          </section>
+
+          <section class="ui-section">
+            <h2 class="ui-section__title">地鼠怎麼運作?</h2>
+            <p class="ui-section__text">我們利用氣壓連動系統，當有壓力施在草坪面上時，針筒內的壓力會順著針筒傳送到中間地鼠，讓地鼠升起。這時候我們就能取得飼料</p>
+          </section>
+
+          <section class="ui-section">
+            <h2 class="ui-section__title">餵食運作方式</h2>
+            <p class="ui-section__text">我們透過 Arduino uno 板控制馬達，並有兩種模式：</p>
+            <ul class="ui-section__list">
+              <li><strong>定時自動：</strong> 精準控制伺服馬達，確保定時定量的牛奶糖補給。</li>
+              <li><strong>按鈕觸發：</strong> 當按下按鈕時，馬達主動補給一顆牛奶糖。</li>
+            </ul>
+          </section>
+
+
+          <section class="ui-section">
+            <h2 class="ui-section__title">與生機系的關聯</h2>
+            <p class="ui-section__text">
+              我們運用<strong>物理學課</strong>裡的壓力推擠來驅動地鼠升起，<br>
+              利用<strong>微控制器課</strong>上學習的 arduino 接線和驅動馬達，<br>
+              還有<strong>計算機程式課</strong>學的 C++ 語法來寫程式。
+            </p>
+          </section>
+          <section class="ui-section">
+            <h2 class="ui-section__title">相關影片</h2>
+            <div class="video-container">
+              <video autoplay loop muted playsinline>
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </section>
+
+          <section class="ui-section">
+            <h2 class="ui-section__title">相關軟體</h2>
+            <div class="ui-software-links">
+              <a href="https://support.arduino.cc/hc/en-us/articles/360019833020-Download-and-install-Arduino-IDE"
+                target="_blank" class="software-card">
+                <img src="arduino_logo.png" alt="Arduino IDE" class="software-card__icon">
+                <span class="software-card__text">arduino IDE</span>
+              </a>
+              <a href="https://code.visualstudio.com/" target="_blank" class="software-card">
+                <img src="vscode.jpg" alt="vscode" class="software-card__icon">
+                <span class="software-card__text"> vscode</span>
+              </a>
+              <a href="https://antigravity.google/" target="_blank" class="software-card">
+                <img src="antigravity_logo.png" alt="Antigravity" class="software-card__icon">
+                <span class="software-card__text">antigravity</span>
+              </a>
+              <a href="https://www.onshape.com/en/" target="_blank" class="software-card">
+                <img src="onshape_logo.jpg" alt="Onshape" class="software-card__icon">
+                <span class="software-card__text">onshape</span>
+              </a>
+            </div>
+          </section>
+
+        </aside>
+      </div>
+
+      <div class="scroll-spacer"></div>
+
+      <section class="ui-section end-credits" aria-label="致謝名單">
+        <h2 class="ui-section__title">致謝名單</h2>
+        <p class="ui-section__text">丁健芳老師、鍾秀玲助教、呂天翊學長、李宇浩學長</p>
+      </section>
+    </div>
+
+    <!-- Scroll Helper -->
+    <div id="scroll-helper" class="ui-scroll-indicator">
+      請快速滑到底!!(用空白按鍵)
+    </div>
+  </main>
+
+  <script src="caramel_data.js"></script>
+  <script src="script.js?v=3"></script>
+</body>
+
+</html>
