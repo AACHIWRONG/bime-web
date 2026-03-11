@@ -5,6 +5,8 @@
 
   const START_FRAME = 83;
   const FRAME_COUNT = 1;
+  const FRAME_STEP = 2; // 跳幀設定：每 2 張挑 1 張
+  const frameSequence = [];
   const canvas = document.getElementById("animation-canvas");
   const ctx = canvas.getContext("2d");
   const loaderEl = document.getElementById("loader");
@@ -13,14 +15,24 @@
   const pageEl = document.getElementById("page");
 
   const frames = {}; // Use object for sparse array
-  const airship = { frame: START_FRAME };
+  const airship = { index: 0 }; // 使用序列索引而非直接幀數
 
   // 1. Preload Images
   async function preloadImages() {
     const promises = [];
-    const min = Math.min(START_FRAME, FRAME_COUNT);
-    const max = Math.max(START_FRAME, FRAME_COUNT);
-    for (let i = min; i <= max; i++) {
+    
+    // 根據步長建立幀序列 (支援正向或反向)
+    if (START_FRAME <= FRAME_COUNT) {
+      for (let i = START_FRAME; i <= FRAME_COUNT; i += FRAME_STEP) {
+        frameSequence.push(i);
+      }
+    } else {
+      for (let i = START_FRAME; i >= FRAME_COUNT; i -= FRAME_STEP) {
+        frameSequence.push(i);
+      }
+    }
+
+    frameSequence.forEach((i) => {
       const n = String(i).padStart(3, "0");
       const path = `./ezgif-frame-${n}.jpg`;
 
@@ -30,7 +42,7 @@
         img.onload = () => {
           frames[i] = img;
           const loadedCount = Object.values(frames).filter(x => x).length;
-          const totalToLoad = max - min + 1;
+          const totalToLoad = frameSequence.length;
           const progress = Math.round((loadedCount / totalToLoad) * 100);
           loaderBarEl.style.width = `${progress}%`;
           loaderPctEl.textContent = progress;
@@ -42,13 +54,14 @@
         };
       });
       promises.push(promise);
-    }
+    });
     await Promise.all(promises);
   }
 
   // 2. Canvas Rendering (object-fit: contain logic)
   function render() {
-    const img = frames[airship.frame];
+    const frameNum = frameSequence[Math.floor(airship.index)];
+    const img = frames[frameNum];
     if (!img) return;
 
     const canvasWidth = window.innerWidth;
@@ -281,8 +294,8 @@
   // 4. GSAP Initialization
   function initGSAP() {
     gsap.to(airship, {
-      frame: FRAME_COUNT,
-      snap: "frame",
+      index: frameSequence.length - 1,
+      snap: "index",
       ease: "none",
       scrollTrigger: {
         trigger: ".scroll-spacer",
