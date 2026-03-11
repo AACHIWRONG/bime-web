@@ -422,9 +422,12 @@ body {
   text-align: center;
 }
 
-.end-credits {
+.end-credits-wrapper {
   position: relative;
   z-index: 10;
   max-width: 800px;
   margin: 40px auto 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
