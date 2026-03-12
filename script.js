@@ -166,6 +166,15 @@
 
     window.addEventListener("pointerdown", handleSpawn);
 
+    // Sidebar Spawn Button
+    const spawnBtn = document.getElementById("spawn-button");
+    if (spawnBtn) {
+      spawnBtn.addEventListener("pointerdown", (e) => {
+        e.stopPropagation(); // Avoid double spawn from window pointerdown
+        for(let i=0; i<3; i++) spawnCaramel();
+      });
+    }
+
     window.addEventListener("resize", () => {
       renderPhysics.canvas.width = window.innerWidth;
       renderPhysics.canvas.height = window.innerHeight;

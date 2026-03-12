@@ -366,61 +366,40 @@ body {
   }
 }
 
-@media (max-width: 480px) {
-  .ui-header {
-    padding: 12px 15px;
-  }
-
-  .ui-header__logo {
-    height: 35px;
-    right: 15px;
-  }
-
-  .ui-header__name {
-    font-size: 1.1rem;
-    padding-right: 50px; /* Leave space for logo */
-  }
-
-  .qr-container {
-    align-items: flex-start;
-  }
-
-  .qr-image {
-    width: 120px;
-    height: 120px;
-  }
-
-  .qr-text {
-    text-align: left;
-  }
-}
-
-/* QR Code Section */
-.qr-container {
+/* Button & Interaction Styles */
+.interaction-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 15px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  margin-top: 10px;
+  padding: 10px 0;
 }
 
-.qr-image {
-  width: 150px;
-  height: 150px;
-  border-radius: 8px;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+.ui-button--premium {
+  padding: 20px 0;
+  width: 100%;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: white;
+  background: linear-gradient(135deg, #ff9900 0%, #ffcc00 100%);
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(255, 153, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.qr-text {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  word-break: break-all;
-  text-align: center;
+.ui-button--premium:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(255, 153, 0, 0.4);
 }
+
+.ui-button--premium:active {
+  transform: scale(0.96);
+}
+
 
 .end-credits-wrapper {
   position: relative;
