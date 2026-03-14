@@ -411,3 +411,79 @@ body {
   flex-direction: column;
   gap: 40px;
 }
+
+/* Poster Carousel Styles */
+.posters-carousel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 20px 0;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #ff9900 transparent;
+}
+
+.posters-carousel::-webkit-scrollbar {
+  height: 6px;
+}
+
+.posters-carousel::-webkit-scrollbar-thumb {
+  background-color: #ff9900;
+  border-radius: 10px;
+}
+
+.poster-card {
+  flex: 0 0 280px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.poster-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  border-color: #ff9900;
+}
+
+.poster-card__icon {
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.poster-card__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  line-height: 1.4;
+  height: 3em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.poster-card__button {
+  margin-top: auto;
+  padding: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  color: white;
+  background: #ff9900;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.poster-card__button:hover {
+  background: #e68a00;
+}
