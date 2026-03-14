@@ -5,7 +5,7 @@
 
   const START_FRAME = 59;
   const FRAME_COUNT = 1;
-  const FRAME_STEP = 4; // 跳幀設定：每 2 張挑 1 張
+  const FRAME_STEP = 4; // 跳幀設定：每 3 張挑 1 張
   const frameSequence = [];
   const canvas = document.getElementById("animation-canvas");
   const ctx = canvas.getContext("2d");
