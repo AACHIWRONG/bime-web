@@ -339,6 +339,44 @@
 
     window.addEventListener("resize", render);
     render(); // Initial render
+
+    // 5. Poster Modal Logic
+    const posterModal = document.getElementById("poster-modal");
+    const modalIframe = document.getElementById("modal-iframe");
+    const modalClose = document.getElementById("modal-close");
+    const posterCards = document.querySelectorAll(".poster-card");
+
+    posterCards.forEach(card => {
+      card.addEventListener("click", () => {
+        const pdfUrl = card.getAttribute("data-pdf");
+        if (pdfUrl) {
+          modalIframe.src = pdfUrl;
+          posterModal.classList.add("active");
+          document.body.style.overflow = "hidden"; // Prevent scrolling
+        }
+      });
+    });
+
+    const closeModal = () => {
+      posterModal.classList.remove("active");
+      document.body.style.overflow = "auto";
+      // Clear src after animation to stop PDF rendering
+      setTimeout(() => { modalIframe.src = ""; }, 400);
+    };
+
+    if (modalClose) modalClose.addEventListener("click", closeModal);
+    if (posterModal) {
+      posterModal.addEventListener("click", (e) => {
+        if (e.target === posterModal) closeModal();
+      });
+    }
+
+    // Close on escape key
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && posterModal.classList.contains("active")) {
+        closeModal();
+      }
+    });
   }
 
   boot();

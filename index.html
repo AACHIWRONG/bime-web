@@ -65,58 +65,11 @@
           </section>
 
           <section class="ui-section">
-            <h2 class="ui-section__title">202台大生機杜鵑花節海報展</h2>
-            <p class="ui-section__text">探索各組的研究成果與專業技術海報：</p>
+            <h2 class="ui-section__title">2026 台大生機杜鵑花節海報展</h2>
+            <p class="ui-section__text">點擊海報即可開啟全螢幕瀏覽研究成果：</p>
             <div class="posters-carousel">
-              <div class="poster-card">
-                <div class="poster-card__icon">📡</div>
-                <h3 class="poster-card__title">IoT無線感測技術與數據分析</h3>
-                <a href="posters/台大生機杜鵑花節-一-IoT無線感測技術與數據分析應用於植物工廠.pdf" target="_blank" class="poster-card__button">📄 查看海報</a>
-              </div>
-              <div class="poster-card">
-                <div class="poster-card__icon">🌡️</div>
-                <h3 class="poster-card__title">Smart environmental sensor & AI capturing</h3>
-                <a href="posters/台大生機杜鵑花節-三-Smart environmental sensor & Automatic image capturing_施教授.pdf" target="_blank" class="poster-card__button">📄 查看海報</a>
-              </div>
-              <div class="poster-card">
-                <div class="poster-card__icon">🤖</div>
-                <h3 class="poster-card__title">智慧無人機與生機工程應用</h3>
-                <a href="posters/台大生機杜鵑花節-四-智慧無人機.pdf" target="_blank" class="poster-card__button">📄 查看海報</a>
-              </div>
-              <div class="poster-card">
-                <div class="poster-card__icon">🌾</div>
-                <h3 class="poster-card__title">採茶機器人與智慧農業新藍圖</h3>
-                <a href="posters/台大生機杜鵑花節-五-採茶機器人.pdf" target="_blank" class="poster-card__button">📄 查看海報</a>
-              </div>
-              <div class="poster-card">
-                <div class="poster-card__icon">💧</div>
-                <h3 class="poster-card__title">模組化氣耕霧滴粒徑分佈之研究</h3>
-                <a href="posters/台大生機杜鵑花節-六-模組化氣耕霧滴粒徑分佈之研究與建置_謝教授.pdf" target="_blank" class="poster-card__button">📄 查看海報</a>
-              </div>
-              <div class="poster-card">
-                <div class="poster-card__icon">🚗</div>
-                <h3 class="poster-card__title">台大生機自動駕駛研發成果</h3>
-                <a href="posters/台大生機杜鵑花節-七-台大生機自動駕駛.pdf" target="_blank" class="poster-card__button">📄 查看海報</a>
-              </div>
-              <div class="poster-card">
-                <div class="poster-card__icon">🦾</div>
-                <h3 class="poster-card__title">手部復健輔助氣壓驅動手套發展</h3>
-                <a href="posters/台大生機杜鵑花節-八-手部復健輔助氣壓驅動手套發展與系統建置_曾教授.pdf" target="_blank" class="poster-card__button">📄 查看海報</a>
-              </div>
-              <div class="poster-card">
-                <div class="poster-card__icon">💉</div>
-                <h3 class="poster-card__title">噴霧投藥系統與流力模擬分析應用</h3>
-                <a href="posters/台大生機杜鵑花節-九-噴霧投藥系統與流體動力學模擬分析應用_曾教授.pdf" target="_blank" class="poster-card__button">📄 查看海報</a>
-              </div>
-              <div class="poster-card">
-                <div class="poster-card__icon">🚁</div>
-                <h3 class="poster-card__title">生機系定翼無人機自主飛行系統研究</h3>
-                <a href="posters/台大生機杜鵑花節-十-定翼無人機.pdf" target="_blank" class="poster-card__button">📄 查看海報</a>
-              </div>
-              <div class="poster-card">
-                <div class="poster-card__icon">🔍</div>
-                <h3 class="poster-card__title">微型檢測技術於生醫應用與發展</h3>
-                <a href="posters/台大生機杜鵑花節-十一-微機電與微流體於生物醫學應用_江教授.pdf" target="_blank" class="poster-card__button">📄 查看海報</a>
+                <a href="posters/台大生機杜鵑花節-十一-微機電與微流體於生物醫學應用_江教授.pdf" target="_blank" class="poster-card__button">📄
+                  查看海報</a>
               </div>
               <div class="poster-card">
                 <div class="poster-card__icon">🏗️</div>
@@ -216,7 +169,15 @@
 
 
 
-          <!-- Scroll Helper -->
+          <!-- Lightbox Modal -->
+    <div id="poster-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <iframe id="modal-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <!-- Scroll Helper -->
           <div id="scroll-helper" class="ui-scroll-indicator">
             請快速滑到底(按這裡!!)
           </div>
