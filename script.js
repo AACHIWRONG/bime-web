@@ -312,12 +312,12 @@
         end: "bottom bottom",
         scrub: 1.5,
       },
-      onUpdate: () => {
+      onUpdate: function() {
         render();
         // Toggle Scroll Helper Visibility
         const helper = document.getElementById('scroll-helper');
         if (helper) {
-          if (progress > 0.95) {
+          if (this.progress() > 0.95) {
             helper.classList.add('is-hidden');
           } else {
             helper.classList.remove('is-hidden');
