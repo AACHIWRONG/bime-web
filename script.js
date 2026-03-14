@@ -347,7 +347,8 @@
     const posterCards = document.querySelectorAll(".poster-card");
 
     posterCards.forEach(card => {
-      card.addEventListener("click", () => {
+      card.addEventListener("click", (e) => {
+        console.log("Poster clicked:", card.getAttribute("data-pdf"));
         const pdfUrl = card.getAttribute("data-pdf");
         if (pdfUrl) {
           modalIframe.src = pdfUrl;

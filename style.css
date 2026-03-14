@@ -463,33 +463,49 @@ body {
   border-radius: 10px;
   overflow: hidden;
   position: relative;
-  background: #f8f8f8;
-  border: 1px solid #eee;
-  pointer-events: none; /* Let parent handle clicks */
+  background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+  border: 1px solid #ddd;
+}
+
+/* Fallback Icon if PDF doesn't load */
+.poster-card__preview::after {
+  content: "PDF";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  font-weight: 800;
+  color: rgba(0,0,0,0.1);
+  letter-spacing: 5px;
+  z-index: 1;
 }
 
 .poster-card__preview iframe {
-  width: 1000px; /* High width for sharp text when scaled down */
+  width: 1000px; 
   height: 1414px;
   border: none;
-  transform: scale(0.24); /* 240 / 1000 = 0.24 approx */
+  transform: scale(0.24); 
   transform-origin: top left;
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 2;
 }
 
-/* Shimmer/Overlay to prevent direct iframe interaction and show focus */
+/* Overlay MUST be on top to catch clicks and prevent iframe interaction */
 .poster-card__overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.05));
-  z-index: 2;
+  z-index: 10;
+  cursor: pointer;
+  pointer-events: auto; /* Ensure it catches clicks */
   transition: background 0.3s ease;
 }
 
 .poster-card:hover .poster-card__overlay {
-  background: transparent;
+  background: rgba(255, 153, 0, 0.05);
 }
 
 .poster-card__content {
