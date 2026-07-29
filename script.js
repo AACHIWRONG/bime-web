@@ -461,7 +461,10 @@
       // GSAP Animation
       gsap.fromTo(authorModal, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
       if (authorContent) {
-        gsap.fromTo(authorContent, { y: 30, scale: 0.95 }, { y: 0, scale: 1, duration: 0.5, ease: "back.out(1.2)", delay: 0.1 });
+        const isMobile = window.innerWidth <= 768;
+        const targetScale = isMobile ? 1 : 0.8;
+        const startScale = isMobile ? 0.95 : 0.75;
+        gsap.fromTo(authorContent, { y: 30, scale: startScale }, { y: 0, scale: targetScale, duration: 0.5, ease: "back.out(1.2)", delay: 0.1 });
       }
 
       // Close mobile dropdown if active

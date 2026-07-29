@@ -1549,12 +1549,14 @@ body {
 
 /* ── About Author Modal Inner Styling (au_ref.jpg) ── */
 .author-card {
-  max-width: 950px;
-  width: 90vw;
-  height: auto;
-  min-height: 80vh;
-  max-height: 70vh;
-  overflow-y: auto;
+.author-card {
+  /* 鎖定固定像素以符合底圖比例 (1235x994)，搭配縮放使用 */
+  width: 950px !important;
+  height: 765px !important;
+  max-width: none;
+  min-height: 0;
+  max-height: none;
+  overflow: hidden;
   padding: 50px !important;
   display: flex;
   flex-direction: column;
@@ -1838,6 +1840,8 @@ body {
     background: url("./images/mobile_pro.jpg") no-repeat center top !important;
     background-size: contain !important;
     position: relative;
+    width: 90vw !important; /* 覆蓋桌機的 950px */
+    height: 90vh !important; /* 覆蓋桌機的 765px */
     overflow-y: auto;
     overflow-x: hidden;
   }
