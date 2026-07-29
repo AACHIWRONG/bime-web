@@ -375,7 +375,6 @@
     const fieldCards = document.querySelectorAll(".bime-fields__node");
     const fieldModal = document.getElementById("field-modal");
     const modalCloseBtn = document.querySelector(".modal-close-btn");
-    const modalBackdrop = document.querySelector(".modal-backdrop");
     const modalTitle = document.getElementById("modal-title");
     const modalSubtitle = document.getElementById("modal-subtitle");
     const modalIcon = document.getElementById("modal-icon");
@@ -413,18 +412,10 @@
       }
 
       fieldModal.classList.remove("modal-hidden");
-
-      // GSAP Animation (Cinematic fade in + scale up)
-      gsap.fromTo(fieldModal, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
-      gsap.fromTo(modalContent, { y: 30, scale: 0.95 }, { y: 0, scale: 1, duration: 0.5, ease: "back.out(1.2)", delay: 0.1 });
     };
 
     const closeModal = () => {
-      gsap.to(fieldModal, {
-        autoAlpha: 0, duration: 0.3, ease: "power2.in", onComplete: () => {
-          if (fieldModal) fieldModal.classList.add("modal-hidden");
-        }
-      });
+      if (fieldModal) fieldModal.classList.add("modal-hidden");
     };
 
     fieldCards.forEach(card => {
@@ -450,22 +441,12 @@
     const aboutAuthorBtn = document.getElementById("about-author-btn");
     const authorCloseBtn = document.getElementById("author-close-btn");
     const authorBackdrop = authorModal ? authorModal.querySelector(".modal-backdrop") : null;
-    const authorContent = authorModal ? authorModal.querySelector(".modal-content") : null;
 
     const openAuthorModal = (e) => {
       if (e) e.preventDefault();
       if (!authorModal) return;
 
       authorModal.classList.remove("modal-hidden");
-
-      // GSAP Animation
-      gsap.fromTo(authorModal, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
-      if (authorContent) {
-        const isMobile = window.innerWidth <= 768;
-        const targetScale = isMobile ? 1 : 0.8;
-        const startScale = isMobile ? 0.95 : 0.75;
-        gsap.fromTo(authorContent, { y: 30, scale: startScale }, { y: 0, scale: targetScale, duration: 0.5, ease: "back.out(1.2)", delay: 0.1 });
-      }
 
       // Close mobile dropdown if active
       const menuBtn = document.getElementById("menu-btn");
@@ -478,11 +459,7 @@
 
     const closeAuthorModal = () => {
       if (!authorModal) return;
-      gsap.to(authorModal, {
-        autoAlpha: 0, duration: 0.3, ease: "power2.in", onComplete: () => {
-          authorModal.classList.add("modal-hidden");
-        }
-      });
+      authorModal.classList.add("modal-hidden");
     };
 
     if (aboutAuthorBtn) aboutAuthorBtn.addEventListener("click", openAuthorModal);

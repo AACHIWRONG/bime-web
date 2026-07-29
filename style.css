@@ -1569,10 +1569,14 @@ body {
   border: 0.5px solid rgba(93, 115, 66, 0.15);
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
+  
+  /* 初始狀態，配合 CSS transition 使用 */
+  transform: translateY(30px) scale(0.75);
 }
 
 #author-modal:not(.modal-hidden) .author-card {
-  transform: translateY(0) scale(1);
+  /* 桌面版模擬 80% 縮放 */
+  transform: translateY(0) scale(0.8);
 }
 
 .author-layout {
@@ -1851,6 +1855,11 @@ body {
     /* 覆蓋桌機的 765px */
     overflow-y: auto;
     overflow-x: hidden;
+    transform: translateY(30px) scale(0.95);
+  }
+
+  #author-modal:not(.modal-hidden) .author-card {
+    transform: translateY(0) scale(1);
   }
 
   /* 手機版隱藏所有已在 mobile_pro.jpg 圖中畫好的文字佈局，僅保留關閉按鈕與隱形贊助熱區 */
