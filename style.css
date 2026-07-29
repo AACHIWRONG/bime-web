@@ -1549,9 +1549,10 @@ body {
 
 /* ── About Author Modal Inner Styling (au_ref.jpg) ── */
 .author-card {
-  /* 鎖定固定像素以符合底圖比例 (1235x994)，搭配縮放使用 */
+  /* 鎖定固定像素以還原使用者在 80% zoom 下開發的長寬比例 */
+  /* 高度約 1020px 能讓 background-size: cover 的裁切恰好對齊文字 */
   width: 950px !important;
-  height: 765px !important;
+  height: 1020px !important;
   max-width: none;
   min-height: 0;
   max-height: none;
