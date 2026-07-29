@@ -1799,13 +1799,15 @@ body {
 
 .architecture-right {
   flex: 1;
-  margin-left: 500px; /* 改為 margin-left 來將內容往右推 */
+  margin-left: 130px;
+  margin-bottom: 30px;
+  /* 改為 margin-left 來將內容往右推 */
 }
 
 .architecture-right ul {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px 40px;
+  gap: 7px 0px;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -1816,8 +1818,8 @@ body {
   color: #444;
   position: relative;
   padding-left: 12px;
-  white-space: nowrap;
-
+  white-space: normal; /* 允許文字換行 */
+  line-height: 1.2; /* 縮小行距讓兩行更緊湊 */
 }
 
 .architecture-right ul li::before {
@@ -1825,8 +1827,7 @@ body {
   font-size: 0.45rem;
   position: absolute;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 5px; /* 取代置中，讓圓點對齊第一行文字 */
   color: #7a8c62;
 }
 
