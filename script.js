@@ -374,7 +374,8 @@
     // --- Six Fields Modal Logic ---
     const fieldCards = document.querySelectorAll(".bime-fields__node");
     const fieldModal = document.getElementById("field-modal");
-    const modalCloseBtn = document.querySelector(".modal-close-btn");
+    const modalCloseBtn = fieldModal ? fieldModal.querySelector(".modal-close-btn") : null;
+    const modalBackdrop = fieldModal ? fieldModal.querySelector(".modal-backdrop") : null;
     const modalTitle = document.getElementById("modal-title");
     const modalSubtitle = document.getElementById("modal-subtitle");
     const modalIcon = document.getElementById("modal-icon");
@@ -433,7 +434,7 @@
       });
     });
     // (Removed duplicate variable declarations that were causing a SyntaxError)
-    
+
     if (modalCloseBtn) modalCloseBtn.addEventListener("click", closeModal);
     if (modalBackdrop) modalBackdrop.addEventListener("click", closeModal);
 
