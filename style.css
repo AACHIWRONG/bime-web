@@ -1806,8 +1806,9 @@ body {
 
 .architecture-right ul {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 7px 0px;
+  grid-template-columns: max-content max-content;
+  gap: 5px 40px;
+  /* 使用 max-content 讓欄位不強制撐滿，並設定固定的 40px 左右間距 */
   list-style: none;
   padding: 0;
   margin: 0;
@@ -1818,8 +1819,10 @@ body {
   color: #444;
   position: relative;
   padding-left: 12px;
-  white-space: normal; /* 允許文字換行 */
-  line-height: 1.2; /* 縮小行距讓兩行更緊湊 */
+  white-space: normal;
+  /* 允許文字換行 */
+  line-height: 1.2;
+  /* 縮小行距讓兩行更緊湊 */
 }
 
 .architecture-right ul li::before {
@@ -1827,7 +1830,8 @@ body {
   font-size: 0.45rem;
   position: absolute;
   left: 0;
-  top: 5px; /* 取代置中，讓圓點對齊第一行文字 */
+  top: 5px;
+  /* 取代置中，讓圓點對齊第一行文字 */
   color: #7a8c62;
 }
 
