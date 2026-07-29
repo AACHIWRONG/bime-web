@@ -1443,7 +1443,7 @@ body {
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: opacity 0.3s ease-out;
 }
 
 #field-modal:not(.modal-hidden),
@@ -1523,7 +1523,7 @@ body {
   /* Center content vertically in the large card */
   text-align: center;
   transform: translateY(30px) scale(0.95);
-  transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 #field-modal:not(.modal-hidden) .glass-card {
@@ -2078,7 +2078,7 @@ body {
   align-items: flex-start !important;
   text-align: left !important;
   transform: translateX(30px);
-  transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 #field-modal.bime-card--one-third:not(.modal-hidden) .glass-card {
