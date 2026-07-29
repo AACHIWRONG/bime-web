@@ -1549,7 +1549,6 @@ body {
 
 /* ── About Author Modal Inner Styling (au_ref.jpg) ── */
 .author-card {
-.author-card {
   /* 鎖定固定像素以符合底圖比例 (1235x994)，搭配縮放使用 */
   width: 950px !important;
   height: 765px !important;
