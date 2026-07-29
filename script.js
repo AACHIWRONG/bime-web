@@ -225,7 +225,7 @@
 
 
       // DNA Text 3 (Frame 195 to 215 - fades out before end)
-      if (frame >= 195 && frame <= 215) {
+      if (frame >= 200 && frame <= 219) {
         if (!text3Visible) {
           gsap.to(".bime-overlay--electricity", { autoAlpha: 1, y: 0, duration: 0.5 });
           document.getElementById("overlay-electricity").classList.add("bime-overlay--visible");
@@ -265,7 +265,7 @@
     // 3. Continue to frame 128 (從這一步開始，一邊往第 128 影格跑，主 DNA 畫布一邊右移，背景 #bg-canvas 不動)
     // 僅限手機版右移 30% 螢幕寬度，桌機版保持原地對齊（0px）
     dnaTl.to(airship, {
-      offsetX: () => window.innerWidth <= 768 ? window.innerWidth * 0.4 : 0,
+      offsetX: () => window.innerWidth <= 768 ? window.innerWidth * 0.18 : 0,
       ease: "power1.inOut",
       duration: 1.0
     }, "move-to-128");
@@ -286,7 +286,7 @@
     });
     // 5. Continue to frame 200
     dnaTl.to(airship, {
-      frame: 200,
+      frame: 215,
       snap: "frame",
       ease: "none",
       onUpdate: checkOverlay,
@@ -532,7 +532,156 @@
       if (visitorCountText) visitorCountText.textContent = "無法取得";
     }
 
+    // --- Page-Flip Transition: DNA → Six Fields ---
+    const sixFieldsEl = document.getElementById("six-fields");
+    const dnaCanvasWrapper = document.querySelector(".bime-dna__canvas-wrapper");
+    const flipTrigger = document.getElementById("flip-trigger");
+
+    if (sixFieldsEl && dnaCanvasWrapper && flipTrigger) {
+      // Reset six-fields to its initial hidden state
+      gsap.set(sixFieldsEl, { y: "100vh" });
+
+      // Track whether flip has completed so we don't run it twice
+      let flipDone = false;
+
+      ScrollTrigger.create({
+        trigger: "#flip-trigger",
+        start: "top 80%",       // 當 flip-trigger 的頂部進入視窗 80% 位置
+        end: "bottom top",
+        onEnter: () => {
+          if (flipDone) return;
+          flipDone = true;
+
+          // 1. 先確保 six-fields 是 fixed / translateY(100vh) 狀態
+          gsap.set(sixFieldsEl, {
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            y: "100vh",
+            zIndex: 20,
+          });
+
+          // 2. 翻頁動畫：six-fields 從底部滑上來，DNA canvas 同時向上淡出
+          const flipTl = gsap.timeline({
+            onComplete: () => {
+              // 翻頁完成：解除 fixed 定位，改為正常文件流
+              // 步驟：
+              //   1. 暫時鎖定 body 不可滾動
+              //   2. 將 six-fields 切換為 relative
+              //   3. ScrollTrigger.refresh() 讓 ST 重算距離
+              //   4. 把 window.scrollY 跳到 six-fields 的 offsetTop
+              //   5. 解鎖滾動
+
+              // 1. 鎖定 body 滾動（防止瞬移抖動）
+              document.body.style.overflow = "hidden";
+
+              // 2. 切換 six-fields 回正常流
+              gsap.set(sixFieldsEl, {
+                position: "relative",
+                transform: "none",
+                height: "auto",
+                minHeight: "100vh",
+                bottom: "auto",
+                left: "auto",
+                width: "100%",
+                y: 0,
+                zIndex: 10,
+              });
+              sixFieldsEl.classList.add("is-landed");
+
+              // 隱藏 DNA canvas wrapper
+              gsap.set(dnaCanvasWrapper, { display: "none" });
+
+              // 3. 告知 ScrollTrigger 重新計算佈局
+              ScrollTrigger.refresh();
+
+              // 4. 滾動到 six-fields 頂部（讓視窗與正常流位置同步）
+              requestAnimationFrame(() => {
+                const targetY = sixFieldsEl.offsetTop;
+                window.scrollTo({ top: targetY, behavior: "instant" });
+
+                // 5. 解鎖滾動
+                document.body.style.overflow = "";
+
+                // 再次 refresh 確保 ST triggers 與新位置同步
+                ScrollTrigger.refresh();
+              });
+            }
+          });
+
+          // Six-fields 從 translateY(100vh) 滑上來
+          flipTl.to(sixFieldsEl, {
+            y: 0,
+            duration: 0.85,
+            ease: "power3.inOut",
+          }, 0);
+
+          // DNA canvas wrapper 同時向上退場（淡出 + 稍微上移）
+          flipTl.to(dnaCanvasWrapper, {
+            y: "-8vh",
+            autoAlpha: 0,
+            duration: 0.6,
+            ease: "power2.in",
+          }, 0);
+        },
+        onLeaveBack: () => {
+          // 使用者往回滾：無論 flipDone 狀態都要重置
+          flipDone = false;
+
+          // 恢復 DNA canvas wrapper（清除 display:none 與位移）
+          gsap.set(dnaCanvasWrapper, { clearProps: "display,y,opacity,visibility" });
+          gsap.set(dnaCanvasWrapper, { autoAlpha: 1, y: 0 });
+
+          // 若 six-fields 已切換為正常流（is-landed）
+          const wasLanded = sixFieldsEl.classList.contains("is-landed");
+
+          if (wasLanded) {
+            // 記下 six-fields 在正常流中佔用的高度，用來補償滾動位置
+            const sixFieldsHeight = sixFieldsEl.getBoundingClientRect().height;
+            const currentScrollY = window.scrollY;
+
+            // 移除 is-landed class
+            sixFieldsEl.classList.remove("is-landed");
+
+            // 將 six-fields 切回 fixed 底部隱藏
+            gsap.set(sixFieldsEl, {
+              position: "fixed",
+              bottom: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              y: "100vh",
+              zIndex: 20,
+              clearProps: "minHeight,transform"
+            });
+
+            // 補償滾動位置（文件縮短後，往上滾補回 six-fields 的高度）
+            document.body.style.overflow = "hidden";
+            window.scrollTo({ top: Math.max(0, currentScrollY - sixFieldsHeight), behavior: "instant" });
+            document.body.style.overflow = "";
+          } else {
+            // 翻頁動畫中途就回滾（還沒 landed）
+            gsap.set(sixFieldsEl, {
+              position: "fixed",
+              bottom: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              y: "100vh",
+              zIndex: 20,
+            });
+          }
+
+          // 重新計算 ScrollTrigger
+          ScrollTrigger.refresh();
+        }
+      });
+    }
+
     window.addEventListener("resize", render);
+
     render(); // Initial render
   }
 

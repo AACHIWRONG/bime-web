@@ -264,6 +264,8 @@
 
       <!-- This spacer dictates how much we can scroll to drive the DNA animation -->
       <div class="bime-dna__spacer"></div>
+      <!-- This extra spacer triggers the page-flip transition after DNA ends -->
+      <div class="bime-dna__flip-spacer" id="flip-trigger"></div>
     </section>
 
     <!-- Section 2: Six Major Fields (Hub and Spoke UI) -->
@@ -341,11 +343,11 @@
         <!-- 6 Field Nodes -->
 
         <!-- 1. Top -->
-        <div class="bime-fields__node bime-fields__node--top" data-layout="dark-mask"
-          data-img="./images/smart_agriculture.png" data-desc="運用感測、AI 與數據分析，發展精準農業與智慧管理，提升作物生產力與永續發展。">
+        <div class="bime-fields__node bime-fields__node--top" data-layout="one-third"
+          data-img="./images/smart_agriculture_agri.png" data-desc="運用感測、AI 與數據分析，發展精準農業與智慧管理，提升作物生產力與永續發展。">
           <div class="bime-fields__node-icon">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
+               stroke-linecap="round" stroke-linejoin="round">
               <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
               <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
             </svg>
@@ -357,7 +359,7 @@
         </div>
 
         <!-- 2. Top Right -->
-        <div class="bime-fields__node bime-fields__node--tr" data-layout="one-third" data-img="./images/biosensing.png"
+        <div class="bime-fields__node bime-fields__node--tr" data-layout="dark-mask" data-img="./images/biosensing.png"
           data-desc="透過先進的生物感測技術，精準捕捉微小的生物訊號，廣泛應用於醫療檢測與環境監測。">
           <div class="bime-fields__node-icon">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
