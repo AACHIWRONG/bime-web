@@ -1,0 +1,2425 @@
+:root {
+  --bg-color: #f0f0f0;
+  --accent-color: #333333;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Loader */
+.bime-loader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-color);
+  z-index: 1000;
+  transition: opacity 0.5s ease;
+}
+
+.bime-loader__bar-bg {
+  width: 200px;
+  height: 4px;
+  background-color: #dddddd;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+#loaderBar {
+  width: 0%;
+  height: 100%;
+  background-color: var(--accent-color);
+  transition: width 0.3s ease;
+}
+
+.bime-loader__label {
+  color: var(--accent-color);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Page Components */
+.is-hidden {
+  display: none;
+}
+
+/* ── Section 1: Core Elements ── */
+.bime-dna__scroll-container {
+  position: relative;
+  width: 100%;
+}
+
+.bime-dna__canvas-wrapper {
+  position: fixed;
+  /* fixed so it stays in background while we scroll .bime-dna__scroll-container */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  background-color: #fcfcfc;
+  /* Exact match with image background */
+}
+
+.bime-dna__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  filter: blur(40px) brightness(0.95);
+  transform: scale(1.1);
+  /* Prevent blurred edges from leaking black */
+  z-index: 0;
+}
+
+.bime-dna__animation {
+  position: relative;
+  display: block;
+  z-index: 1;
+  image-rendering: high-quality;
+  /* 提示瀏覽器使用最佳補插點算法 */
+}
+
+.bime-dna__landing-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 2;
+  /* Sits above the canvases but below the text overlays */
+  transition: opacity 0.05s ease;
+}
+
+.bime-dna__spacer {
+  height: 400vh;
+  /* Control the scroll length for the DNA animation */
+}
+
+.dna-text-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+  white-space: nowrap;
+  letter-spacing: 0.1em;
+}
+
+/* ── Section 2: Six Major Fields (Hub & Spoke) ── */
+.bime-fields {
+  position: relative;
+  z-index: 10;
+  background: #f4f6f3;
+  /* Light grey-green background from the image */
+  color: #333;
+  padding: 0 5vw;
+  min-height: 100vh;
+  width: 100vw;
+  margin-top: 20vh;
+  /* Creates a buffer after the DNA animation before this section slides up */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bime-fields__layout {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  /* Extended to whole page */
+  margin: 0 auto;
+  gap: 8vw;
+  align-items: center;
+}
+
+/* Left Column: Intro */
+.bime-fields__intro {
+  flex: 0 0 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 3vw;
+}
+
+.bime-fields__num {
+  font-size: 5rem;
+  font-weight: 300;
+  color: #4a5d34;
+  /* Dark green */
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.bime-fields__title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #4a5d34;
+  margin-bottom: 5px;
+  letter-spacing: 0.05em;
+}
+
+.bime-fields__subtitle {
+  font-size: 1rem;
+  color: #4a5d34;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+
+.hub-divider {
+  width: 50px;
+  height: 3px;
+  background: #7a8c62;
+  margin-bottom: 30px;
+}
+
+.bime-fields__desc {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #4a5d34;
+}
+
+/* Right Column: Wheel */
+.bime-fields__wheel {
+  flex: 1;
+  position: relative;
+  aspect-ratio: 1 / 1;
+  max-width: 850px;
+  /* Larger wheel for full screen */
+  margin: 0 auto;
+  border-radius: 50%;
+}
+
+.bime-fields__ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.bime-fields__ring--main {
+  width: 75%;
+  height: 75%;
+  border: 1px solid rgba(122, 140, 98, 0.35);
+  /* Solid thin line */
+}
+
+.bime-fields__ring--inner {
+  width: 58%;
+  height: 58%;
+  border: 1px solid rgba(142, 189, 124, 0.2);
+}
+
+.bime-fields__ring--inner2 {
+  width: 51%;
+  height: 51%;
+  border: 1px dashed rgba(142, 189, 124, 0.25);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.bime-fields__ring--outer {
+  width: 95%;
+  height: 95%;
+  border: 1px solid rgba(142, 189, 124, 0.15);
+}
+
+.bime-fields__ring--core {
+  width: 44%;
+  height: 44%;
+  border: 1px solid rgba(142, 189, 124, 0.15);
+}
+
+.bime-fields__center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40%;
+  height: 40%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.1),
+    0 0 0 8px rgba(255, 255, 255, 0.8),
+    /* White inner halo */
+    0 0 0 10px rgba(122, 140, 98, 0.4),
+    /* Thicker, deeper green ring */
+    0 0 100px rgba(122, 140, 98, 0.3);
+  /* Soft deep glow around the center */
+}
+
+.bime-fields__center h2 {
+  font-size: 3rem;
+  color: #4a5d34;
+  font-weight: 700;
+  margin-bottom: 5px;
+  letter-spacing: 0.05em;
+}
+
+.bime-fields__center p {
+  font-size: 1rem;
+  color: #4a5d34;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* Field Nodes */
+.bime-fields__node {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  background: #fdfdfd;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  cursor: pointer;
+  /* Thicker, deeper green glow matching six.jpg */
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 0 35px rgba(122, 140, 98, 0.45),
+    inset 0 0 0 1px rgba(93, 115, 66, 0.2);
+  transition: box-shadow 0.3s ease, scale 0.3s ease;
+  scale: 1;
+}
+
+.bime-fields__node:hover {
+  scale: 1.15;
+  /* Use scale instead of transform to not conflict with animation */
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.15),
+    0 0 55px rgba(122, 140, 98, 0.65),
+    inset 0 0 0 1px rgba(93, 115, 66, 0.3);
+}
+
+.bime-fields__node-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4a5d34;
+  /* Green matching the theme */
+}
+
+.bime-fields__node-icon svg {
+  width: 32px;
+  height: 32px;
+  stroke: #4a5d34;
+}
+
+/* Labels */
+.bime-fields__node-label {
+  position: absolute;
+  width: max-content;
+  pointer-events: none;
+  /* Don't interfere with node hovering */
+}
+
+.bime-fields__node-label h3 {
+  font-size: 1.1rem;
+  color: #4a5d34;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.bime-fields__node-label p {
+  font-size: 0.8rem;
+  color: #4a5d34;
+}
+
+
+/* ── Node Positioning Math (Hexagon) ── */
+.bime-fields__node--top {
+  top: 12.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.bime-fields__node--tr {
+  top: 31.25%;
+  left: 82.47%;
+  transform: translate(-50%, -50%);
+}
+
+.bime-fields__node--br {
+  top: 68.75%;
+  left: 82.47%;
+  transform: translate(-50%, -50%);
+}
+
+.bime-fields__node--bottom {
+  top: 87.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.bime-fields__node--bl {
+  top: 68.75%;
+  left: 17.53%;
+  transform: translate(-50%, -50%);
+}
+
+.bime-fields__node--tl {
+  top: 31.25%;
+  left: 17.53%;
+  transform: translate(-50%, -50%);
+}
+
+/* ── SVG Ring & Icon Circle Animations ── */
+.ring-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.base-line {
+  fill: none;
+  stroke-width: 0.8;
+  stroke-linecap: round;
+}
+
+.trace-line {
+  fill: none;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-dashoffset: 0;
+  animation: ring-spin 12s linear infinite;
+}
+
+.main-base {
+  stroke: rgba(142, 189, 124, 0.25);
+  /* 嫩綠色 */
+}
+
+.main-trace {
+  stroke: rgb(165, 200, 152);
+  /* 明亮嫩綠 */
+  stroke-dasharray: 60 250;
+  animation-duration: 10s;
+}
+
+.inner-base {
+  stroke: rgba(142, 189, 124, 0.2);
+}
+
+.inner-trace {
+  stroke: rgba(163, 207, 147, 0.65);
+  stroke-dasharray: 40 270;
+  animation-duration: 14s;
+  animation-direction: reverse;
+}
+
+.core-base {
+  stroke: rgba(142, 189, 124, 0.15);
+}
+
+.core-trace {
+  stroke: rgba(163, 207, 147, 0.55);
+  stroke-dasharray: 25 283;
+  animation-duration: 18s;
+}
+
+/* --- Spoke Lines connecting nodes to center --- */
+/* --- Spoke Lines connecting nodes to center --- */
+.spoke-line {
+  stroke: rgba(154, 207, 130, 0.784);
+  /* 草綠色連接線 */
+  stroke-width: 0.35;
+  stroke-dasharray: 4 0.5;
+  /* 虛線效果 */
+}
+
+/* --- Orbiting Planets --- */
+.planet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background-color: #98d57b;
+  /* 草綠行星 */
+  border-radius: 50%;
+  box-shadow: 0 0 6px #9ac38a, 0 0 12px #76c152;
+  z-index: 5;
+  margin-top: -2.5px;
+  margin-left: -2.5px;
+  pointer-events: none;
+}
+
+/* 讓各個行星對應的第二顆有初始的角度偏移 */
+.planet--main2,
+.planet--inner2-2,
+.planet--core2 {
+  top: auto;
+  bottom: 0;
+  /* 放置在對角線底部，形成 180 度偏移 */
+  margin-top: 2.5px;
+}
+
+.planet--inner2 {
+  top: auto;
+  bottom: 0;
+}
+
+/* 2 Planets orbiting per ring with offset angles via container rotation */
+/* Main Ring: 75% width */
+.bime-fields__ring--main {
+  animation: spin-orbit-clockwise 14s linear infinite;
+}
+
+/* Inner Ring: 58% width (逆向旋轉) */
+.bime-fields__ring--inner {
+  animation: spin-orbit-counter 18s linear infinite;
+}
+
+/* Inner2 Ring: 51% width */
+.bime-fields__ring--inner2 {
+  animation: spin-orbit-clockwise 16s linear infinite;
+}
+
+/* Core Ring: 44% width */
+.bime-fields__ring--core {
+  animation: spin-orbit-clockwise 22s linear infinite;
+}
+
+@keyframes spin-orbit-clockwise {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes spin-orbit-counter {
+  from {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+}
+
+/* Inner2 Trace line style */
+.inner2-base {
+  stroke: rgba(142, 189, 124, 0.15);
+}
+
+.inner2-trace {
+  stroke: rgba(163, 207, 147, 0.55);
+  stroke-dasharray: 35 250;
+  animation-duration: 16s;
+}
+
+/* Icon circle on each node */
+.icon-circle-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.outer-base {
+  fill: none;
+  stroke: rgba(163, 207, 147, 0.3);
+  stroke-width: 0.8;
+}
+
+.icon-trace {
+  fill: none;
+  stroke: rgba(163, 207, 147, 0.85);
+  stroke-width: 1.2;
+  stroke-dasharray: 30 155;
+  animation: ring-spin 6s linear infinite;
+}
+
+@keyframes ring-spin {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -308;
+  }
+}
+
+/* Specific Label Placements */
+.bime-fields__node-label--top {
+  bottom: calc(100% + 15px);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.bime-fields__node-label--bottom {
+  top: calc(100% + 15px);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.bime-fields__node-label--right {
+  left: calc(100% + 20px);
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: left;
+}
+
+.bime-fields__node-label--left {
+  right: calc(100% + 20px);
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: right;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .bime-fields__layout {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .bime-fields__intro {
+    flex: none;
+    align-items: center;
+  }
+
+  .bime-fields__node-label--left,
+  .bime-fields__node-label--right {
+    /* Compress slightly on smaller screens */
+  }
+}
+
+
+
+/* ── Section 3: Azalea Festival Works ── */
+.bime-works {
+  position: relative;
+  z-index: 10;
+  background: var(--bg-color);
+  height: 400vh;
+  /* Height for scrolling down to trigger horizontal scroll */
+}
+
+.bime-works__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.azalea-title {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+}
+
+.horizontal-scroll-wrapper {
+  display: flex;
+  gap: 50px;
+  padding: 0 50vw;
+  /* padding to allow items to start from center and end at center */
+  width: max-content;
+  /* transform will be updated by JS ScrollTrigger */
+}
+
+.work-card {
+  width: 60vw;
+  max-width: 800px;
+  height: 60vh;
+  background: #222;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #333;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+/* ── Header ── */
+.bime-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 40px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+}
+
+.bime-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #111;
+}
+
+.bime-header__logo-icon {
+  font-size: 1.8rem;
+}
+
+.bime-header__logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.bime-header__logo-text strong {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+}
+
+.bime-header__logo-text span {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #555;
+}
+
+.bime-header__nav {
+  display: flex;
+  gap: 40px;
+}
+
+.bime-header__nav a {
+  text-decoration: none;
+  color: #111;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.bime-header__menu-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.bime-header__menu-btn span {
+  display: block;
+  width: 30px;
+  height: 1.5px;
+  background: #111;
+}
+
+/* ── Initial Landing Overlay ── */
+.bime-overlay__content {
+  position: absolute;
+  top: 25%;
+  left: 15%;
+  max-width: 500px;
+}
+
+.bime-overlay__title {
+  font-size: 6.5rem;
+  font-weight: 600;
+  line-height: 1.05;
+  color: #111;
+  margin-bottom: 25px;
+  letter-spacing: -0.02em;
+}
+
+.bime-overlay__title .bime-overlay__highlight {
+  color: #5d7342;
+}
+
+.bime-overlay__desc {
+  font-size: 1.1rem;
+  color: #444;
+  line-height: 1.8;
+  margin-top: 25px;
+  margin-bottom: 50px;
+}
+
+
+
+
+
+/* ?�?� Section 3: Azalea Festival Works ?�?� */
+.bime-works {
+  position: relative;
+  z-index: 10;
+  background: #fcfcfc;
+  /* Off-white parchment background */
+  height: 400vh;
+  /* Height for scrolling down to trigger horizontal scroll */
+}
+
+.bime-works__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.azalea-title {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+  color: #4a5d34;
+  /* Dark green for light background */
+}
+
+.horizontal-scroll-wrapper {
+  display: flex;
+  gap: 50px;
+  padding: 0 50vw;
+  /* padding to allow items to start from center and end at center */
+  width: max-content;
+  /* transform will be updated by JS ScrollTrigger */
+  position: relative;
+  z-index: 2;
+  /* Ensure wrapper stays above the data line */
+}
+
+.work-card {
+  width: 60vw;
+  max-width: 800px;
+  height: 60vh;
+
+  /* Glassmorphism Styling */
+  background: rgba(252, 252, 252, 0.75);
+  /* Parchment White tint */
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 0.5px solid rgba(93, 115, 66, 0.2);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #4a5d34;
+  /* Dark green text to contrast with light glass */
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.work-card__content {
+  position: relative;
+  z-index: 3;
+}
+
+/* Jedi geometric trace on card hover */
+.work-card__border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 20px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.work-card__border::before,
+.work-card__border::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 2px solid transparent;
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border-radius: 20px;
+}
+
+.work-card__border::before {
+  top: 0;
+  left: 0;
+}
+
+.work-card__border::after {
+  bottom: 0;
+  right: 0;
+}
+
+.work-card:hover .work-card__border::before {
+  width: 100%;
+  height: 100%;
+  border-top-color: #5d7342;
+  border-right-color: #5d7342;
+  transition: width 0.3s ease-out, height 0.3s ease-out 0.3s;
+}
+
+.work-card:hover .work-card__border::after {
+  width: 100%;
+  height: 100%;
+  border-bottom-color: #5d7342;
+  border-left-color: #5d7342;
+  transition: width 0.3s ease-out, height 0.3s ease-out 0.3s;
+}
+
+/* Background data line for portfolio */
+.works-data-line-container {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  transform: translateY(-50%);
+  z-index: 0;
+  /* Keep behind scroll wrapper */
+  pointer-events: none;
+}
+
+.works-data-line-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  /* Darker line for light background */
+}
+
+.works-data-line-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: #5d7342;
+  box-shadow: 0 0 10px #5d7342;
+  /* width will be updated by GSAP */
+}
+
+.work-card {
+  flex-shrink: 0;
+}
+
+/* ?�?� Header ?�?� */
+.bime-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+}
+
+.bime-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #111;
+}
+
+.bime-header__logo-icon {
+  font-size: 1.8rem;
+}
+
+.bime-header__logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.bime-header__logo-text strong {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+}
+
+.bime-header__logo-text span {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #555;
+}
+
+.bime-header__menu-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  z-index: 102;
+  /* Above dropdown */
+  padding: 10px;
+}
+
+.bime-header__menu-btn span {
+  display: block;
+  width: 30px;
+  height: 2px;
+  background: #111;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+/* When active, animate into a cross */
+.bime-header__menu-btn.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.bime-header__menu-btn.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.bime-header__menu-btn.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.bime-header__dropdown {
+  position: absolute;
+  top: 80px;
+  right: 60px;
+  background: rgba(252, 252, 252, 0.95);
+  /* Parchment white */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(93, 115, 66, 0.2);
+  border-radius: 12px;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 101;
+}
+
+.bime-header__dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.bime-header__dropdown a {
+  text-decoration: none;
+  color: #5d7342;
+  /* Grey-green */
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 12px 40px;
+  transition: all 0.2s ease;
+}
+
+.bime-header__dropdown a:hover {
+  background: rgba(93, 115, 66, 0.15);
+  color: #3a4a29;
+  /* Darker green on hover */
+}
+
+/* ?�?� Initial Landing Overlay ?�?� */
+.bime-overlay__content {
+  position: absolute;
+  top: calc(25% - 80px);
+  left: 15%;
+  max-width: 500px;
+}
+
+.bime-overlay__title {
+  font-size: 6.5rem;
+  font-weight: 600;
+  line-height: 1.05;
+  color: #111;
+  margin-bottom: 25px;
+  letter-spacing: -0.02em;
+}
+
+.bime-overlay__title .bime-overlay__highlight {
+  color: #5d7342;
+}
+
+.bime-overlay__desc {
+  font-size: 1.1rem;
+  color: #444;
+  line-height: 1.8;
+  margin-top: 25px;
+  margin-bottom: 50px;
+}
+
+.bime-overlay__actions {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.bime-overlay__btn-watch {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  color: #111;
+}
+
+.bime-overlay__btn-watch .bime-overlay__btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 1px solid #5d7342;
+  color: #5d7342;
+  font-size: 0.8rem;
+  padding-left: 3px;
+}
+
+.bime-overlay__scroll-hint {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: #333;
+}
+
+.bime-overlay__slogan {
+  position: absolute;
+  top: 50%;
+  right: 15%;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.8;
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  padding-left: 20px;
+}
+
+/* ?�?� Vertical Navigation Bar ?�?� */
+.bime-sidebar {
+  position: fixed;
+  bottom: 80px;
+  left: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  z-index: 100;
+}
+
+.bime-sidebar__track {
+  position: absolute;
+  left: 5px;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: -1;
+}
+
+.bime-sidebar__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  text-decoration: none;
+  color: #888;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.bime-sidebar__item--active {
+  color: #5d7342;
+  /* Green from the image */
+}
+
+.bime-sidebar__indicator {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ccc;
+  margin-top: 4px;
+  transition: all 0.3s ease;
+}
+
+.bime-sidebar__item--active .bime-sidebar__indicator {
+  background: #5d7342;
+  box-shadow: 0 0 10px rgba(93, 115, 66, 0.5);
+}
+
+.bime-sidebar__text {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.bime-sidebar__num {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.bime-sidebar__label {
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+/* ?�?� PPT Overlay (bio.jpg layout) ?�?� */
+.bime-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  color: #333;
+}
+
+.bime-overlay.bime-overlay--visible {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+.bime-overlay--landing {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.bime-overlay__content-left {
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  max-width: 400px;
+}
+
+.bime-overlay__content-center-right {
+  position: absolute;
+  top: 15%;
+  left: calc(55% + 40px);
+  /* Push it to the right half of the screen */
+  max-width: 450px;
+}
+
+.bime-overlay__num {
+  font-size: 6rem;
+  font-weight: 300;
+  line-height: 1;
+  color: #5d7342;
+  margin-bottom: -10px;
+}
+
+.bime-overlay__title-zh {
+  font-size: 4.5rem;
+  font-weight: 700;
+  color: #5d7342;
+  line-height: 1;
+  margin-bottom: 5px;
+  letter-spacing: 0.1em;
+}
+
+.bime-overlay__title-en {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #5d7342;
+  letter-spacing: 0.2em;
+  margin-bottom: 30px;
+}
+
+.bime-overlay__divider {
+  width: 40px;
+  border: none;
+  border-top: 2px solid #5d7342;
+  margin-bottom: 30px;
+}
+
+.bime-overlay__desc {
+  font-size: 1.1rem;
+  line-height: 2;
+  color: #444;
+  margin-bottom: 50px;
+}
+
+.bime-overlay__btn-explore {
+  background: transparent;
+  border: 1px solid #5d7342;
+  border-radius: 30px;
+  padding: 10px 25px;
+  font-size: 0.9rem;
+  color: #5d7342;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.bime-overlay__btn-explore:hover {
+  background: #5d7342;
+  color: #fff;
+}
+
+.bime-overlay__content-bottom-right {
+  position: absolute;
+  bottom: 10%;
+  right: 10%;
+  display: flex;
+  gap: 40px;
+}
+
+.bime-overlay__sub-field {
+  text-align: center;
+  max-width: 180px;
+  position: relative;
+}
+
+.bime-overlay__sub-field:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -20px;
+  top: 10%;
+  height: 80%;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.bime-overlay__icon-circle {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto 20px auto;
+  color: #5d7342;
+}
+
+.bime-overlay__sub-field h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.bime-overlay__sub-field p {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* ?? Footer ?? */
+.bime-footer {
+  position: relative;
+  z-index: 20;
+  background: #fcfcfc;
+  padding: 60px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid rgba(93, 115, 66, 0.2);
+}
+
+.bime-footer__visitor {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(93, 115, 66, 0.2);
+  border-radius: 30px;
+  padding: 12px 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.bime-footer__visitor .status-icon {
+  font-size: 1.2rem;
+}
+
+.bime-footer__visitor .status-label {
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+
+
+
+#field-modal,
+#author-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+#field-modal:not(.modal-hidden),
+#author-modal:not(.modal-hidden) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Backdrop: click to close modal */
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  cursor: pointer;
+  background: transparent;
+}
+
+/* 讓關於作者模態框的背景也有精緻的毛玻璃模糊與暗綠遮罩 */
+#author-modal .modal-backdrop {
+  background: rgba(26, 30, 20, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Fullscreen Background & Blur Overlay */
+.modal-photo-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.modal-photo-area img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-photo-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(26, 30, 20, 0.4);
+  /* Dark muted green tint */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Floating Glass Card (Quiet Luxury) */
+.glass-card {
+  position: relative;
+  z-index: 2;
+  background: rgba(252, 252, 252, 0.75);
+  /* Parchment White tint */
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 0.5px solid rgba(93, 115, 66, 0.2);
+  /* Antique Bronze / Green border */
+  border-radius: 20px;
+  width: 75vw;
+  height: 75vh;
+  max-width: none;
+  padding: 60px 50px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* Center content vertically in the large card */
+  text-align: center;
+  transform: translateY(30px) scale(0.95);
+  transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+#field-modal:not(.modal-hidden) .glass-card {
+  transform: translateY(0) scale(1);
+}
+
+.modal-text-area {
+  width: 100%;
+}
+
+.modal-header {
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-icon {
+  font-size: 2.5rem;
+  margin-bottom: 25px;
+  opacity: 0.9;
+}
+
+/* ── About Author Modal Inner Styling (au_ref.jpg) ── */
+.author-card {
+  max-width: 950px;
+  width: 90vw;
+  height: auto;
+  min-height: 80vh;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 50px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left !important;
+  align-items: stretch;
+
+  /* 設置整個卡片的底圖為 au.jpg */
+  background: url("./images/au.jpg") no-repeat center center !important;
+  background-size: cover !important;
+  border: 0.5px solid rgba(93, 115, 66, 0.15);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+}
+
+#author-modal:not(.modal-hidden) .author-card {
+  transform: translateY(0) scale(1);
+}
+
+.author-layout {
+  display: flex;
+  gap: 40px;
+  flex: 1;
+}
+
+/* Author Left Column */
+.author-left {
+  flex: 0 0 350px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.author-tag {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: #7a8c62;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.author-title {
+  display: block;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1a120b;
+  margin: 0 0 15px 0;
+  letter-spacing: 0.05em;
+
+  /* 往左 30px，往下 40px */
+  position: relative;
+  left: -20px;
+  top: 60px;
+}
+
+.author-name,
+.author-sub {
+  position: relative;
+  top: 90px;
+  left: -20px;
+}
+
+.author-name {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #4a5d34;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.1em;
+}
+
+.author-sub {
+  font-size: 0.95rem;
+  color: #4a5d34;
+  margin: 0 0 15px 0;
+  font-weight: 500;
+}
+
+.author-divider-sub {
+  display: none;
+  /* 隱藏舊的分隔線 */
+}
+
+.author-email {
+  display: none;
+  /* 隱藏舊的信箱，底圖已有 */
+}
+
+/* Sponsor Coffee Widget  */
+.author-support {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  width: 100%;
+  height: 100%;
+}
+
+/* 贊助方框向下移動 200px (從 60px 調整至 260px，以完美覆蓋底圖上的手繪咖啡杯做隱形觸發) */
+.author-support-link {
+  margin-top: 230px !important;
+  position: relative;
+  z-index: 10;
+  display: block;
+  width: 280px;
+  height: 155px;
+  /* 剛好覆蓋整個手繪咖啡杯與贊助字樣方框 */
+  cursor: pointer;
+}
+
+.author-support__text {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #4a5d34;
+  letter-spacing: 0.1em;
+}
+
+/* Author Right Column */
+.author-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  /* 再向下移動 100px (padding-top 從 200px 變為 300px) */
+  padding-top: 420px;
+  margin-left: 45px;
+  /* 整體內容往右移 5px */
+}
+
+/* Details grid split (Skills vs Philosophy) */
+.author-details {
+  display: flex;
+  gap: 52px;
+  flex: 1;
+}
+
+.detail-column {
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+}
+
+.detail-column h3 {
+  font-size: 1.15rem;
+  padding-left: 35px;
+  color: #4a5d34;
+  margin: 0 0 16px 0;
+  font-weight: 700;
+  border-bottom: none !important;
+  padding-bottom: 0;
+  display: block !important;
+
+}
+
+.detail-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.detail-column ul li {
+  font-size: 0.8rem;
+  color: #333;
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 12px;
+  line-height: 1.4;
+}
+
+.detail-column ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #7a8c62;
+  font-weight: bold;
+}
+
+.philosophy-text {
+  font-size: 0.65rem;
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 5px;
+}
+
+.project-reference {
+  background: transparent !important;
+  /* 移除專案參考背景 */
+  border: none !important;
+  /* 移除專案參考邊框 */
+  padding: 0 !important;
+  margin-top: -1px;
+  font-size: 0.6rem;
+}
+
+.project-reference strong {
+  display: block;
+  color: #4a5d34;
+  margin-bottom: 2px;
+}
+
+.project-reference span {
+  color: #555;
+}
+
+/* Bottom website architecture summary box */
+.author-architecture {
+  margin-top: 25px;
+  background: transparent !important;
+  /* 移除架構底色方框 */
+  border: none !important;
+  /* 移除邊框 */
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.architecture-left {
+  flex: 0 0 130px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-right: none !important;
+  /* 移除中間的直線 */
+  padding-right: 0;
+  display: none;
+  /* 隱藏左側圖示與標題，因為底圖已繪製好 */
+}
+
+.architecture-icon {
+  display: flex;
+  align-items: center;
+}
+
+.architecture-left strong {
+  font-size: 0.85rem;
+  color: #4a5d34;
+  white-space: nowrap;
+}
+
+.architecture-right {
+  flex: 1;
+}
+
+.architecture-right ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.architecture-right ul li {
+  font-size: 0.75rem;
+  color: #444;
+  position: relative;
+  padding-left: 12px;
+  white-space: nowrap;
+}
+
+.architecture-right ul li::before {
+  content: "●";
+  font-size: 0.45rem;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7a8c62;
+}
+
+/* Responsive adjustment for author modal */
+@media (max-width: 768px) {
+  .author-card {
+    padding: 0 !important;
+    height: 90vh;
+    max-height: 90vh;
+    /* 換上手機專屬的 mobile_pro.jpg */
+    background: url("./images/mobile_pro.jpg") no-repeat center top !important;
+    background-size: contain !important;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* 手機版隱藏所有已在 mobile_pro.jpg 圖中畫好的文字佈局，僅保留關閉按鈕與隱形贊助熱區 */
+  .author-card .author-layout {
+    display: block !important;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  /* 手機版將 left 跟 right 的文字實體隱藏，但保留點擊連結 */
+  .author-card .author-left {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+  }
+
+  .author-card .author-name,
+  .author-card .author-sub,
+  .author-card .author-title,
+  .author-card .author-right,
+  .author-card .author-architecture {
+    display: none !important;
+  }
+
+  .author-card .author-support-link {
+    position: absolute !important;
+    /* 依據 mobile_pro.jpg 圖中「贊助」與咖啡杯方框的具體百分比高度進行定位 */
+    top: 42% !important; 
+    left: 8% !important;
+    width: 84% !important;
+    height: 24% !important;
+    margin-top: 0 !important;
+    display: block !important;
+    background: transparent !important;
+    z-index: 15;
+  }
+
+  .author-card .author-support {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .author-card .author-support__text {
+    display: none !important; /* 僅在手機版隱藏贊助文字 */
+  }
+}
+
+
+/* Typography Utilities (Quiet Luxury) */
+.luxury-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #1a120b;
+  /* Dark Ebony */
+  margin-bottom: 10px;
+}
+
+.refined-sub {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  color: #5d7342;
+  /* BIME Green */
+  text-transform: uppercase;
+}
+
+.modal-body {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  line-height: 2;
+.modal-body p {
+  margin-bottom: 20px;
+}
+
+/* ── 翻新 one-third 佈局：完全還原 agri.jpg 圓框照片字卡模板 ── */
+#field-modal.bime-card--one-third {
+  flex-direction: row; /* 照片在左，文字在右 */
+  align-items: center;
+  justify-content: center;
+}
+
+/* 智慧農業照片區（左側）：改為 50% 寬度並限制為精緻正圓 */
+#field-modal.bime-card--one-third .modal-photo-area {
+  position: relative;
+  width: 45%;
+  flex: 0 0 45%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  background: transparent;
+  padding-left: 30px;
+}
+
+#field-modal.bime-card--one-third .modal-photo-area img {
+  width: 320px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 50%; /* 正圓形 */
+  border: 1.5px solid rgba(122, 140, 98, 0.4); /* 草綠色圓環邊框 */
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.05),
+    0 0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 0 11px rgba(122, 140, 98, 0.15); /* 仿照 agri.jpg 的重疊光環 */
+}
+
+/* 去除一分三佈局底下的模糊遮罩，保持清爽 */
+#field-modal.bime-card--one-third .modal-photo-mask {
+  display: none;
+}
+
+/* 右側文字區：改為 55% 寬度，採用羊皮紙白底色與精細左對齊排版 */
+#field-modal.bime-card--one-third .glass-card {
+  position: relative;
+  border-radius: 0;
+  border: none;
+  border-right: 1px solid rgba(93, 115, 66, 0.2);
+  background: #fcfcfc;
+  /* Solid parchment white */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  padding: 80px 40px;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+  transform: translateX(-30px);
+  /* Slide in from left */
+}
+
+#field-modal.bime-card--one-third:not(.modal-hidden) .glass-card {
+  transform: translateX(0);
+}
+
+#field-modal.bime-card--one-third .modal-header {
+  align-items: flex-start;
+}
+
+#field-modal.bime-card--one-third .modal-close-btn {
+  background: rgba(0, 0, 0, 0.05);
+  /* Darker btn for white bg */
+}
+
+/* Dark Mask Variant */
+#field-modal.bime-card--dark-mask .glass-card {
+  background: rgba(17, 17, 17, 0.7);
+  /* Deep dark semi-transparent */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  color: #fff;
+}
+
+#field-modal.bime-card--dark-mask .luxury-title {
+  color: #fff;
+}
+
+#field-modal.bime-card--dark-mask .refined-sub {
+  color: #a3b88b;
+  /* Lighter green for dark bg */
+}
+
+#field-modal.bime-card--dark-mask .modal-body {
+  color: #eee;
+}
+
+#field-modal.bime-card--dark-mask .modal-icon {
+  color: #fff;
+}
+
+#field-modal.bime-card--dark-mask .modal-close-btn span {
+  background-color: #fff;
+}
+
+.field-card {
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.field-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================================================================
+   RESPONSIVE DESIGN (Mobile & Tablet)
+   ========================================================================= */
+@media (max-width: 768px) {
+
+  /* 1. Header & Navigation */
+  .bime-sidebar {
+    display: none;
+  }
+
+  .bime-header__logo-text span {
+    display: none;
+  }
+
+  /* 2. Core Elements (DNA Scroll & Overlay) */
+  #bg-canvas {
+    display: none !important;
+    /* 手機版隱藏模糊背景，只聚焦於 DNA 本體移動 */
+  }
+
+
+
+  .dna-text-overlay {
+    font-size: 2.5rem;
+  }
+
+  .bime-overlay__title {
+    font-size: 3rem;
+  }
+
+  /* Sub title shrunk further */
+  .bime-overlay__title-en {
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+  }
+
+  .bime-overlay__slogan {
+    display: none;
+  }
+
+  /* Make overlay flow instead of absolute positioning on mobile */
+  .bime-overlay {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5vh 5vw;
+  }
+
+  .bime-overlay__content,
+  .bime-overlay__content-left,
+  .bime-overlay__content-center-right {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    text-align: left;
+    padding-left: 20px;
+    margin-bottom: 10px;
+  }
+
+  /* Flow the subfields right under the desc */
+  .bime-overlay__content-bottom-right {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    width: calc(100% - 40px);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: flex-start;
+    gap: 10px;
+    background: transparent;
+    padding: 10px 0;
+    margin-top: 15px;
+    margin-left: 20px;
+  }
+
+  /* Shrink the subfields cleanly without negative margin scale hacks */
+  .bime-overlay__sub-field {
+    text-align: center;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .bime-overlay__sub-field .bime-overlay__icon-circle {
+    transform: scale(0.6);
+    margin: -10px auto;
+  }
+
+  .bime-overlay__sub-field h4 {
+    font-size: 0.75rem !important;
+    white-space: nowrap;
+    margin-top: 5px;
+  }
+
+  .bime-overlay__sub-field p {
+    font-size: 0.55rem !important;
+    line-height: 1.2;
+    display: block;
+  }
+
+  .bime-overlay__sub-field:not(:last-child)::after {
+    display: none;
+  }
+
+  /* 3. Six Major Fields */
+  .bime-fields {
+    margin-top: -15vh !important;
+    /* 手機版重現向上擠壓覆蓋 DNA 的效果 */
+  }
+
+  .bime-fields__layout {
+    flex-direction: column;
+    gap: 40px;
+    padding-top: 50px;
+  }
+
+  .bime-fields__intro {
+    flex: none;
+    padding-left: 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  .hub-divider {
+    margin: 15px auto;
+  }
+
+  .bime-fields__title {
+    font-size: 2.2rem !important;
+  }
+
+  .bime-fields__num {
+    font-size: 3.5rem !important;
+  }
+
+  /* Make the wheel fill the full width */
+  .bime-fields__wheel {
+    width: 85vw;
+    height: 85vw;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    left: calc(50% - 5px);
+    transform: translateX(-50%);
+  }
+
+  .bime-fields__ring {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1 !important;
+    /* 強制保持正圓，防止因寬度壓縮變橢圓 */
+  }
+
+  /* 手機版：強制將「生物感測」與「精密製造」(one-third 佈局) 翻新成跟其他四個一樣的 dark-mask 滿版毛玻璃+背景照片效果 */
+  #field-modal.bime-card--one-third {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  #field-modal.bime-card--one-third .modal-photo-area {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    flex: none !important;
+    z-index: 1 !important;
+    pointer-events: none !important;
+  }
+
+  #field-modal.bime-card--one-third .modal-photo-mask {
+    display: block !important;
+    /* 顯示模糊背景遮罩 */
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(26, 30, 20, 0.4) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  #field-modal.bime-card--one-third .glass-card {
+    position: relative !important;
+    width: 95vw !important;
+    height: 65vh !important;
+    max-width: none !important;
+    padding: 30px 20px !important;
+    border-radius: 20px !important;
+    flex: none !important;
+    background: rgba(17, 17, 17, 0.7) !important;
+    /* 改成暗色滿版毛玻璃 */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset !important;
+    color: #fff !important;
+  }
+
+  #field-modal.bime-card--one-third .luxury-title {
+    color: #fff !important;
+  }
+
+  #field-modal.bime-card--one-third .refined-sub {
+    color: #a3b88b !important;
+  }
+
+  #field-modal.bime-card--one-third .modal-body {
+    color: #eee !important;
+  }
+
+  #field-modal.bime-card--one-third .modal-close-btn span {
+    background-color: #fff !important;
+  }
+
+  /* Shrink nodes and center on mobile */
+  .bime-fields__node {
+    width: 75px !important;
+    height: 75px !important;
+  }
+
+  .bime-fields__center {
+    width: 110px !important;
+    height: 110px !important;
+  }
+
+  .bime-fields__center h2 {
+    font-size: 1.2rem;
+  }
+
+  .bime-fields__center p {
+    font-size: 0.6rem;
+  }
+
+  /* 確保圓環為 72vw 的大小，節點更小更精緻 */
+  .bime-fields__wheel {
+    width: 65vw !important;
+    height: 65vw !important;
+    max-width: none;
+    max-height: none;
+    margin: 30px auto 0 !important;
+    /* 減少上方外邊距 20px */
+    left: auto !important;
+    transform: none !important;
+    position: relative !important;
+    top: -20px;
+    /* 整體再往上平移 20px */
+  }
+
+  .bime-fields__node {
+    width: 48px !important;
+    height: 48px !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08),
+      0 0 15px rgba(122, 140, 98, 0.35),
+      inset 0 0 0 0.5px rgba(93, 115, 66, 0.2) !important;
+  }
+
+  /* 顯示小圖示並縮小 */
+  .bime-fields__node-icon {
+    display: flex !important;
+  }
+
+  .bime-fields__node-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  /* 輪盤中心大圓縮小並調整文字 */
+  .bime-fields__center {
+    width: 110px !important;
+    height: 110px !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08),
+      0 0 0 4px rgba(255, 255, 255, 0.8),
+      0 0 0 5px rgba(122, 140, 98, 0.25) !important;
+  }
+
+  .bime-fields__center h2 {
+    font-size: 1.1rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .bime-fields__center p {
+    font-size: 0.5rem !important;
+    line-height: 1.2 !important;
+  }
+
+  /* 行星也等比例縮小 */
+  .planet {
+    width: 3.5px !important;
+    height: 3.5px !important;
+    margin-top: -1.75px !important;
+    margin-left: -1.75px !important;
+  }
+
+  /* 手機版：重新將文字標籤擺放到按鈕外面的四周，避免文字塞在圓圈裡 */
+  .bime-fields__node-label {
+    top: auto !important;
+    left: auto !important;
+    bottom: auto !important;
+    right: auto !important;
+    transform: none !important;
+    position: absolute !important;
+    width: 90px !important;
+    text-align: center !important;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .bime-fields__node-label h3 {
+    font-size: 0.65rem !important;
+    line-height: 1.2;
+    margin: 0 auto 1px !important;
+    width: 100% !important;
+    white-space: nowrap !important;
+    color: #4a5d34 !important;
+    font-weight: 700 !important;
+  }
+
+  .bime-fields__node-label p {
+    font-size: 0.45rem !important;
+    line-height: 1.1;
+    color: #7a8c62 !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* 六個方位文字標籤的外側精確定位（配合縮小後的 48px 按鈕） */
+  .bime-fields__node-label--top {
+    bottom: calc(100% + 5px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .bime-fields__node-label--bottom {
+    top: calc(100% + 5px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .bime-fields__node-label--right {
+    left: calc(100% + 6px) !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    text-align: left !important;
+  }
+
+  .bime-fields__node-label--left {
+    right: calc(100% + 6px) !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    text-align: right !important;
+  }
+
+  .glass-card {
+    width: 95vw;
+    height: 65vh;
+    padding: 30px 20px;
+  }
+
+  .modal-text-area {
+    padding: 30px 20px;
+  }
+
+  #field-modal.bime-card--one-third .glass-card {
+    flex-direction: column;
+  }
+
+  #field-modal.bime-card--one-third .modal-photo-area {
+    position: relative;
+    width: 100%;
+    height: 40%;
+  }
+
+  #field-modal.bime-card--one-third .modal-text-area {
+    width: 100%;
+    height: 60%;
+    padding: 20px;
+  }
+
+  /* 4. Azalea Works */
+  .bime-works {
+    height: 300vh;
+  }
+
+  .work-card {
+    width: 85vw;
+    height: 30vh;
+  }
+
+  .horizontal-scroll-wrapper {
+    padding: 0 7.5vw;
+  }
+}
+
+.bime-footer__visitor strong {
+  font-size: 1.1rem;
+  color: #5d7342;
+  font-weight: 700;
+}
+
+/* --- FORCED TRANSPARENCY FIX --- */
+.bime-overlay__title-en,
+.bime-overlay__sub-field,
+.bime-fields__node-label,
+.bime-fields__node-label h3,
+.bime-fields__node-label p,
+.bime-fields__subtitle {
+  background-color: transparent !important;
+  text-shadow: none !important;
+}

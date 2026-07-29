@@ -1,0 +1,1108 @@
+:root {
+  --bg-color: #f0f0f0;
+  --accent-color: #333333;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Loader */
+#loader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-color);
+  z-index: 1000;
+  transition: opacity 0.5s ease;
+}
+
+.loader__bar-bg {
+  width: 200px;
+  height: 4px;
+  background-color: #dddddd;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+#loaderBar {
+  width: 0%;
+  height: 100%;
+  background-color: var(--accent-color);
+  transition: width 0.3s ease;
+}
+
+.loader__label {
+  color: var(--accent-color);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Page Components */
+.is-hidden {
+  display: none;
+}
+
+/* ── Section 1: Core Elements ── */
+.scroll-container {
+  position: relative;
+  width: 100%;
+}
+
+.canvas-wrapper {
+  position: fixed;
+  /* fixed so it stays in background while we scroll .scroll-container */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  background-color: #fcfcfc;
+  /* Exact match with image background */
+}
+
+#bg-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  filter: blur(40px) brightness(0.95);
+  transform: scale(1.1);
+  /* Prevent blurred edges from leaking black */
+  z-index: 0;
+}
+
+#animation-canvas {
+  position: relative;
+  display: block;
+  z-index: 1;
+  image-rendering: high-quality;
+  /* 提示瀏覽器使用最佳補插點算法 */
+}
+
+#landing-static-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 2;
+  /* Sits above the canvases but below the text overlays */
+  transition: opacity 0.05s ease;
+}
+
+.scroll-spacer {
+  height: 400vh;
+  /* Control the scroll length for the DNA animation */
+}
+
+.dna-text-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+  white-space: nowrap;
+  letter-spacing: 0.1em;
+}
+
+/* ── Section 2: Six Major Fields (Hub & Spoke) ── */
+#six-fields {
+  position: relative;
+  z-index: 10;
+  background: #f4f6f3;
+  /* Light grey-green background from the image */
+  color: #333;
+  padding: 0 5vw;
+  min-height: 100vh;
+  width: 100vw;
+  margin-top: 20vh;
+  /* Creates a buffer after the DNA animation before this section slides up */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hub-spoke-section {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  /* Extended to whole page */
+  margin: 0 auto;
+  gap: 8vw;
+  align-items: center;
+}
+
+/* Left Column: Intro */
+.hub-intro {
+  flex: 0 0 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 3vw;
+}
+
+.hub-number {
+  font-size: 5rem;
+  font-weight: 300;
+  color: #4a5d34;
+  /* Dark green */
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.hub-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #4a5d34;
+  margin-bottom: 5px;
+  letter-spacing: 0.05em;
+}
+
+.hub-subtitle {
+  font-size: 1rem;
+  color: #4a5d34;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+
+.hub-divider {
+  width: 50px;
+  height: 3px;
+  background: #7a8c62;
+  margin-bottom: 30px;
+}
+
+.hub-desc {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #4a5d34;
+}
+
+/* Right Column: Wheel */
+.hub-wheel-container {
+  flex: 1;
+  position: relative;
+  aspect-ratio: 1 / 1;
+  max-width: 850px;
+  /* Larger wheel for full screen */
+  margin: 0 auto;
+  border-radius: 50%;
+}
+
+.wheel-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.wheel-ring.main {
+  width: 75%;
+  height: 75%;
+  border: 1px solid rgba(122, 140, 98, 0.35);
+  /* Solid thin line */
+}
+
+.wheel-ring.inner {
+  width: 58%;
+  height: 58%;
+  border: 1px solid rgba(122, 140, 98, 0.2);
+}
+
+.wheel-ring.outer {
+  width: 95%;
+  height: 95%;
+  border: 1px solid rgba(122, 140, 98, 0.2);
+}
+
+.wheel-ring.core {
+  width: 44%;
+  height: 44%;
+  border: 1px solid rgba(122, 140, 98, 0.15);
+}
+
+.wheel-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40%;
+  height: 40%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.1),
+    0 0 0 8px rgba(255, 255, 255, 0.8),
+    /* White inner halo */
+    0 0 0 10px rgba(122, 140, 98, 0.4),
+    /* Thicker, deeper green ring */
+    0 0 50px rgba(122, 140, 98, 0.3);
+  /* Soft deep glow around the center */
+}
+
+.wheel-center h2 {
+  font-size: 3rem;
+  color: #4a5d34;
+  font-weight: 700;
+  margin-bottom: 5px;
+  letter-spacing: 0.05em;
+}
+
+.wheel-center p {
+  font-size: 1rem;
+  color: #4a5d34;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* Field Nodes */
+.field-node {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  background: #fdfdfd;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  cursor: pointer;
+  /* Thicker, deeper green glow matching six.jpg */
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 0 35px rgba(122, 140, 98, 0.45),
+    inset 0 0 0 1px rgba(93, 115, 66, 0.2);
+  transition: box-shadow 0.3s ease, scale 0.3s ease;
+  scale: 1;
+}
+
+.field-node:hover {
+  scale: 1.15;
+  /* Use scale instead of transform to not conflict with animation */
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.15),
+    0 0 55px rgba(122, 140, 98, 0.65),
+    inset 0 0 0 1px rgba(93, 115, 66, 0.3);
+}
+
+.field-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4a5d34;
+  /* Green matching the theme */
+}
+
+.field-icon svg {
+  width: 32px;
+  height: 32px;
+  stroke: #4a5d34;
+}
+
+/* Node Positioning Math (Hexagon) */
+.node-top {
+  top: 12.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.node-tr {
+  top: 31.25%;
+  left: 82.47%;
+  transform: translate(-50%, -50%);
+}
+
+.node-br {
+  top: 68.75%;
+  left: 82.47%;
+  transform: translate(-50%, -50%);
+}
+
+.node-bottom {
+  top: 87.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.node-bl {
+  top: 68.75%;
+  left: 17.53%;
+  transform: translate(-50%, -50%);
+}
+
+.node-tl {
+  top: 31.25%;
+  left: 17.53%;
+  transform: translate(-50%, -50%);
+}
+
+/* Labels */
+.node-label {
+  position: absolute;
+  width: max-content;
+  pointer-events: none;
+  /* Don't interfere with node hovering */
+}
+
+.node-label h3 {
+  font-size: 1.1rem;
+  color: #4a5d34;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.node-label p {
+  font-size: 0.8rem;
+  color: #4a5d34;
+}
+
+/* Specific Label Placements */
+.label-top {
+  bottom: calc(100% + 15px);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.label-bottom {
+  top: calc(100% + 15px);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.label-right {
+  left: calc(100% + 20px);
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: left;
+}
+
+.label-left {
+  right: calc(100% + 20px);
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: right;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .hub-spoke-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .hub-intro {
+    flex: none;
+    align-items: center;
+  }
+
+  .label-left,
+  .label-right {
+    /* Compress slightly on smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* On very small screens, maybe hide the wheel and fall back to grid, or scale it down heavily */
+  .hub-wheel-container {
+    transform: scale(0.6);
+  }
+}
+
+/* ── Section 3: Azalea Festival Works ── */
+#azalea-works {
+  position: relative;
+  z-index: 10;
+  background: #111;
+  height: 400vh;
+  /* Height for scrolling down to trigger horizontal scroll */
+}
+
+.sticky-container {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.azalea-title {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+}
+
+.horizontal-scroll-wrapper {
+  display: flex;
+  gap: 50px;
+  padding: 0 50vw;
+  /* padding to allow items to start from center and end at center */
+  width: max-content;
+  /* transform will be updated by JS ScrollTrigger */
+}
+
+.work-card {
+  width: 60vw;
+  max-width: 800px;
+  height: 60vh;
+  background: #222;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #fff;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+/* ── Header ── */
+#main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 40px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #111;
+}
+
+.logo-icon {
+  font-size: 1.8rem;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-text strong {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+}
+
+.logo-text span {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #555;
+}
+
+.top-nav {
+  display: flex;
+  gap: 40px;
+}
+
+.top-nav a {
+  text-decoration: none;
+  color: #111;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.menu-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.menu-icon span {
+  display: block;
+  width: 30px;
+  height: 1.5px;
+  background: #111;
+}
+
+/* ── Initial Landing Overlay ── */
+.landing-left {
+  position: absolute;
+  top: 25%;
+  left: 15%;
+  max-width: 500px;
+}
+
+.landing-title {
+  font-size: 6.5rem;
+  font-weight: 600;
+  line-height: 1.05;
+  color: #111;
+  margin-bottom: 25px;
+  letter-spacing: -0.02em;
+}
+
+.landing-title .highlight {
+  color: #5d7342;
+}
+
+.landing-desc {
+  font-size: 1.1rem;
+  color: #444;
+  line-height: 1.8;
+  margin-top: 25px;
+  margin-bottom: 50px;
+}
+
+.landing-actions {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.watch-btn {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  color: #111;
+}
+
+.watch-btn .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 1px solid #5d7342;
+  color: #5d7342;
+  font-size: 0.8rem;
+  padding-left: 3px;
+}
+
+.scroll-hint {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: #333;
+}
+
+.landing-right {
+  position: absolute;
+  top: 50%;
+  right: 15%;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.8;
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  padding-left: 20px;
+}
+
+/* ── Vertical Navigation Bar ── */
+#vertical-nav {
+  position: fixed;
+  bottom: 80px;
+  left: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  z-index: 100;
+}
+
+.nav-track {
+  position: absolute;
+  left: 5px;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: -1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  text-decoration: none;
+  color: #888;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.nav-item.active {
+  color: #5d7342;
+  /* Green from the image */
+}
+
+.nav-indicator {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ccc;
+  margin-top: 4px;
+  transition: all 0.3s ease;
+}
+
+.nav-item.active .nav-indicator {
+  background: #5d7342;
+  box-shadow: 0 0 10px rgba(93, 115, 66, 0.5);
+}
+
+.nav-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.nav-num {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.nav-label {
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+/* ── PPT Overlay (bio.jpg layout) ── */
+.ppt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  color: #333;
+}
+
+.ppt-overlay.visible {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+#overlay-landing {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.overlay-left {
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  max-width: 400px;
+}
+
+.overlay-center-right {
+  position: absolute;
+  top: 15%;
+  left: 55%;
+  /* Push it to the right half of the screen */
+  max-width: 450px;
+}
+
+.overlay-num {
+  font-size: 6rem;
+  font-weight: 300;
+  line-height: 1;
+  color: #5d7342;
+  margin-bottom: -10px;
+}
+
+.overlay-title-zh {
+  font-size: 4.5rem;
+  font-weight: 700;
+  color: #5d7342;
+  line-height: 1;
+  margin-bottom: 5px;
+  letter-spacing: 0.1em;
+}
+
+.overlay-title-en {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #5d7342;
+  letter-spacing: 0.2em;
+  margin-bottom: 30px;
+}
+
+.overlay-divider {
+  width: 40px;
+  border: none;
+  border-top: 2px solid #5d7342;
+  margin-bottom: 30px;
+}
+
+.overlay-desc {
+  font-size: 1.1rem;
+  line-height: 2;
+  color: #444;
+  margin-bottom: 50px;
+}
+
+.explore-btn {
+  background: transparent;
+  border: 1px solid #5d7342;
+  border-radius: 30px;
+  padding: 10px 25px;
+  font-size: 0.9rem;
+  color: #5d7342;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.explore-btn:hover {
+  background: #5d7342;
+  color: #fff;
+}
+
+.overlay-bottom-right {
+  position: absolute;
+  bottom: 10%;
+  right: 10%;
+  display: flex;
+  gap: 40px;
+}
+
+.sub-field {
+  text-align: center;
+  max-width: 180px;
+  position: relative;
+}
+
+.sub-field:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -20px;
+  top: 10%;
+  height: 80%;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.icon-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px dashed #5d7342;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto 20px auto;
+  color: #5d7342;
+}
+
+.sub-field h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.sub-field p {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* ── Floating Status Widget ── */
+#status-widget {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 15px 25px;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  /* Let clicks pass through if needed, or remove if they want it clickable */
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-icon {
+  font-size: 1.2rem;
+}
+
+.status-label {
+  font-size: 0.8rem;
+  color: #555;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.status-item strong {
+  font-size: 1rem;
+  color: #111;
+  font-weight: 700;
+}
+
+.status-divider {
+  width: 1px;
+  height: 25px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* ── Six Fields Modal (Quiet Luxury & Glassmorphism) ── */
+#field-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#field-modal:not(.modal-hidden) {
+  pointer-events: auto;
+}
+
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(252, 252, 252, 0.7);
+  /* White/grayish backdrop */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.modal-content.sixteen-nine {
+  position: relative;
+  background: #fcfcfc;
+  width: 90vw;
+  max-width: 1200px;
+  aspect-ratio: 16 / 9;
+  border-radius: 20px;
+  padding: 0;
+  /* Padding moved to text area */
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(93, 115, 66, 0.1);
+  transform: translateY(30px) scale(0.95);
+  display: flex;
+  overflow: hidden;
+  /* Ensure photo respects border radius */
+  border-top: 4px solid #5d7342;
+}
+
+.modal-split-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-text-area {
+  flex: 1;
+  padding: 80px 60px;
+  /* Generous Whitespace (Quiet Luxury) */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #fcfcfc;
+  z-index: 2;
+  /* Sit above the mask */
+}
+
+/* Default Layout (e.g. 50/50 roughly) */
+.modal-split-layout.layout-half .modal-text-area {
+  flex: 1;
+}
+
+.modal-split-layout.layout-half .modal-photo-area {
+  flex: 1.2;
+}
+
+/* One-Third Whitespace Layout */
+.modal-split-layout.layout-one-third .modal-text-area {
+  flex: 1;
+}
+
+.modal-split-layout.layout-one-third .modal-photo-area {
+  flex: 2;
+  /* 1/3 text, 2/3 photo */
+}
+
+.modal-photo-area {
+  position: relative;
+  /* Flex is controlled by the layout classes above */
+}
+
+.modal-photo-area img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-photo-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #fcfcfc 0%, transparent 40%);
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.modal-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+#modal-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #111;
+  letter-spacing: 0.05em;
+}
+
+#modal-subtitle {
+  font-size: 1rem;
+  color: #5d7342;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.modal-body {
+  font-size: 1.05rem;
+  color: #555;
+  line-height: 1.8;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  width: 44px;
+  height: 44px;
+  background: rgba(252, 252, 252, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease, transform 0.3s ease;
+  z-index: 10;
+  /* Ensure it stays above the photo */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.modal-close-btn:hover {
+  background: rgba(252, 252, 252, 1);
+  transform: scale(1.05);
+}
+
+.modal-close-btn span {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: #111;
+  position: absolute;
+}
+
+.modal-close-btn span:nth-child(1) {
+  transform: rotate(45deg);
+}
+
+.modal-close-btn span:nth-child(2) {
+  transform: rotate(-45deg);
+}
+
+.field-card {
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.field-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+}

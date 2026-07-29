@@ -1,0 +1,5 @@
+﻿css = open('style.css', 'r', encoding='utf-8').read()
+opens = css.count('{')
+closes = css.count('}')
+if opens == closes: print('BALANCED')
+else: print(f'UNBALANCED: {opens} vs {closes}')
