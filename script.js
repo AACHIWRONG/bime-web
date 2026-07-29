@@ -432,7 +432,8 @@
         }
       });
     });
-
+    // (Removed duplicate variable declarations that were causing a SyntaxError)
+    
     if (modalCloseBtn) modalCloseBtn.addEventListener("click", closeModal);
     if (modalBackdrop) modalBackdrop.addEventListener("click", closeModal);
 
